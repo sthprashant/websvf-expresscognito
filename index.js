@@ -8,6 +8,7 @@ const app = express();
 const loginPage = require('./routes/login')
 const signupPage = require('./routes/signup')
 const dashboardPage = require('./routes/dashboard')
+const logoutPage = require('./routes/logout')
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -17,6 +18,7 @@ const port = process.env.PORT || 3000;
 app.use(dashboardPage);
 app.use(loginPage);
 app.use(signupPage);
+app.use(logoutPage);
 
 //first middleware test
 app.get('/', (req, res, next) => {
