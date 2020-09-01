@@ -1,48 +1,51 @@
 const path = require('path')
 
 const express = require('express');
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
 const userPool = require('../Userpool');
-
-
+const authenticate = require('../controller/authenticate');
+const status = require('../controller/status');
 
 
 const router = express.Router();
 
+
+//GET
 router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'views', 'login.html'));
 });
 
+
+//POST
 router.post('/login', (req, res) => {
-    console.log(req.body);
-
-    const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-        Username: req.body.email,
-        Password: req.body.password,
-    });
-
-    const user = new AmazonCognitoIdentity.CognitoUser({
-        Username: req.body.email,
-        Pool: userPool,
-    });
-
-    user.authenticateUser(authDetails, {
-        onSuccess: data => {
-            console.log('onSuccess:', data);
+    var auth = authenticate(req.body.email, req.body.password)
+        .then(data => {
+            console.log('redirecting user to Dashboard');
+            //status.checkStatus();
+            const user = userPool.getCurrentUser();
+            if (user) {
+                user.getSession((err, session) => {
+                    if (err) {
+                        console.log('error from login.js getSession');
+                        console.log(error);
+                        // reject(err);
+                    } else {
+                        console.log('from login.js getSession');
+                        console.log('session: ',session);
+                        //
+                    }
+                })
+            } else {
+                console.log('could not find user');
+                //reject('could not find user');
+            }
             res.redirect('/dashboard');
-        },
+        }).catch(err => {
+            console.log(err);
+            res.send(err.message + '<div><a href="/login">Try Logging in Again</a></div>');
+        });
 
-        onFailure: err =>{
-            //alert(JSON.stringify(err));
-            console.log('onFailure: ', err);
-            res.send(err.message + '<div><a href="/login">go back to login page</a></div>')
-        },
-
-        newPasswordRequired: data => {
-            console.log('newPasswordRequired', data);
-        }
-    });
+    console.log(auth);
 });
 
 module.exports = router;
