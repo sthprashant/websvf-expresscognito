@@ -1,26 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= pageTitle%>
-    </title>
+<%- include('includes/head.ejs') %>
 </head>
 
 <body>
-    <h1> Dashboard </h1>
+
+    <%- include('includes/nav.ejs') %>
 
     <main>
+        <div class="container">
+            <div class="p-5 pb-1">
+                <h1 class="display-2 text-center">Dashboard</h1>
+            </div>
 
-        <a href="/logout">logout</a>
-        <ul> <!--provides link to locally running docker instances-->
+            <div class="p-5 pb-1">
+
+                <% if (logOnStatus === 'false') { %>
+
+                <h1 class="text-center">Please <a href="/login" class="">Log In</a> to view dashboard</h1>
+
+                <% } else {%>
+                <div class="card m-2" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dynamic Instance Title </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">some dynamic info goes here</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="http://127.0.0.1:8080" class="card-link">Open</a>
+                        <a href="#" class="card-link">Delete</a>
+                    </div>
+                </div>
+
+                <div class="card m-2" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dynamic Instance Title </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">some dynamic info goes here</h6>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="http://localhost:3005" class="card-link">Open</a>
+                        <a href="#" class="card-link">Delete</a>
+                    </div>
+                </div>
+
+                <% } %>
+                <!-- <ul style="display:inline-block; list-style:none;"> 
+                    <li><a href="http://127.0.0.1:8080" target="_blank">Instance 1</a></li>
+                    <li><a href="http://localhost:3005" target="_blank">Instance 2</a></li>
+        
+                </ul> -->
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- <main>
+
+        <ul> 
             <li><a href="http://127.0.0.1:8080" target="_blank">Instance 1</a></li>
             <li><a href="http://localhost:3005" target="_blank">Instance 2</a></li>
 
         </ul>
-    </main>
+    </main> -->
 
     </form>
 </body>

@@ -11,8 +11,10 @@ const loginPage = require('./routes/login')
 const signupPage = require('./routes/signup')
 const dashboardPage = require('./routes/dashboard')
 const logoutPage = require('./routes/logout')
+const getSession = require('./controller/getSession');
+const userPool = require('./Userpool');
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //selecting port 
 const port = process.env.PORT || 3000;
@@ -24,14 +26,22 @@ app.use(logoutPage);
 
 //first middleware test
 app.get('/', (req, res, next) => {
-    console.log('main page is rendered');
-    res.render('index', {pageTitle: 'Home WebSVF'});
-    //res.sendFile(path.join(__dirname, './', 'views', 'index.html'));
+
+    getSession()
+        .then(
+            session => {
+                console.log('page / : user logged in');
+                res.render('index', { pageTitle: 'WebSVF - Home', logOnStatus: 'true' });
+            }
+        )
+        .catch(err => {
+            console.log('could not find user');
+            res.render('index', { pageTitle: 'WebSVF - Home', logOnStatus: 'false' });
+        })
 });
 
 app.use((req, res, next) => {
-    res.status(404).render('404', {pageTitle: '404'});
-    //res.status(404).sendFile(path.join(__dirname, './', 'views','404' ,'404.html'));
+    res.status(404).render('404', { pageTitle: '404', logOnStatus: 'false' });
 });
 
 app.listen(port, () => {

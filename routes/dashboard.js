@@ -16,12 +16,12 @@ router.get('/dashboard', (req, res) => {
             session => {
                 console.log('from login.js getSession');
                 console.log('session: ', session);
-                res.render('dashboard', {pageTitle: 'WebSVF - Dashboard'});
+                res.render('dashboard', { pageTitle: 'WebSVF - Dashboard', logOnStatus: 'true' });
             }
         )
         .catch(err => {
             console.log('could not find user');
-            res.send('<div><a href="/login">Log in</a> to view the dashboard</div>');
+            res.render('dashboard', { pageTitle: 'WebSVF - Dashboard', logOnStatus: 'false' });
         })
 
 

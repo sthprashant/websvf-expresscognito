@@ -5,14 +5,28 @@ const express = require('express');
 const userPool = require('../Userpool');
 const authenticate = require('../controller/authenticate');
 const status = require('../controller/status');
-
+const getSession = require('../controller/getSession');
 
 const router = express.Router();
 
 
 //GET
 router.get('/login', (req, res) => {
-    res.render('login', {pageTitle: 'WebSVF - Login'});
+
+    getSession()
+        .then(
+            session => {
+                console.log('from login.js getSession');
+                console.log('session: ', session);
+                res.render('login', { pageTitle: 'WebSVF - Login', logOnStatus: 'true' });
+            }
+        )
+        .catch(err => {
+            console.log('could not find user');
+            res.render('login', { pageTitle: 'WebSVF - Login', logOnStatus: 'false' });
+        })
+
+    // res.render('dashboard', { pageTitle: 'WebSVF - Dashboard', logOnStatus: 'false' });
 });
 
 
@@ -31,7 +45,7 @@ router.post('/login', (req, res) => {
                         // reject(err);
                     } else {
                         console.log('from login.js getSession');
-                        console.log('session: ',session);
+                        console.log('session: ', session);
                         //
                     }
                 })
